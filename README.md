@@ -34,6 +34,9 @@ Distanz eines Steins zum Zielfeld (Chebyshev, also „König-Schritte"):
 Die:der **Hinweisgeber:in** bekommt **+1 Punkt pro Stein**, der im 3×3-Rahmen um
 das Ziel liegt (Entfernung ≤ 1).
 
+Wer beim **2. Hinweis keinen neuen Stein** setzt, dessen erster Tipp wird einfach
+nochmal gewertet (zählt doppelt) – wie zwei Würfel auf demselben Feld.
+
 Es gibt kein automatisches Spielende – das Scoreboard läuft weiter, bis jemand
 auf **„Spiel zurücksetzen"** klickt.
 

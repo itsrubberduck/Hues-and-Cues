@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { cellDistance, scoreGuess, scoreRound } from './scoring'
+import { cellDistance, playerStones, scoreGuess, scoreRound } from './scoring'
 
 describe('cellDistance (Chebyshev)', () => {
   test('same cell is distance 0', () => {
@@ -32,6 +32,27 @@ describe('scoreGuess (points for one stone vs target)', () => {
 
   test('distance 3+ scores 0', () => {
     expect(scoreGuess(target, { col: 18, row: 8 })).toBe(0)
+  })
+})
+
+describe('playerStones (a player has two cubes per turn)', () => {
+  const a = { col: 5, row: 5 }
+  const b = { col: 9, row: 2 }
+
+  test('both rounds placed -> both stones count', () => {
+    expect(playerStones(a, b)).toEqual([a, b])
+  })
+
+  test('only round 1 placed -> the first guess counts twice', () => {
+    expect(playerStones(a, undefined)).toEqual([a, a])
+  })
+
+  test('only round 2 placed -> the second guess counts twice', () => {
+    expect(playerStones(undefined, b)).toEqual([b, b])
+  })
+
+  test('nothing placed -> no stones', () => {
+    expect(playerStones(undefined, undefined)).toEqual([])
   })
 })
 

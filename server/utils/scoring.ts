@@ -17,6 +17,18 @@ export function scoreGuess(target: Cell, guess: Cell): number {
   return 0
 }
 
+/**
+ * The two cubes a player contributes in a turn. If a round's guess is missing
+ * (e.g. they didn't move/place a stone the second time), the other round's
+ * guess is used again, so it scores as if the same spot was chosen twice.
+ */
+export function playerStones(g1: Cell | undefined, g2: Cell | undefined): Cell[] {
+  const first = g1 ?? g2
+  const second = g2 ?? g1
+  if (!first || !second) return []
+  return [first, second]
+}
+
 export interface RoundResult {
   perPlayer: Record<string, number>
   giver: number

@@ -1,5 +1,5 @@
 import type { Cell, RoundResult } from './scoring'
-import { scoreRound } from './scoring'
+import { playerStones, scoreRound } from './scoring'
 
 export type Phase = 'lobby' | 'pick' | 'cue1' | 'cue2' | 'reveal'
 
@@ -167,12 +167,7 @@ function revealAndScore() {
   const stonesByPlayer: Record<string, Cell[]> = {}
   for (const pid of Object.keys(game.players)) {
     if (pid === game.cueGiverId) continue
-    const stones: Cell[] = []
-    const g1 = game.guesses[1][pid]
-    const g2 = game.guesses[2][pid]
-    if (g1) stones.push(g1)
-    if (g2) stones.push(g2)
-    stonesByPlayer[pid] = stones
+    stonesByPlayer[pid] = playerStones(game.guesses[1][pid], game.guesses[2][pid])
   }
   const result = scoreRound(game.target, stonesByPlayer)
   for (const [pid, pts] of Object.entries(result.perPlayer)) {
