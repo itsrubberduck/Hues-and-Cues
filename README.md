@@ -1,76 +1,82 @@
-# Nuxt Minimal Starter
+# Hues & Cues 🎨
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Eine lokale, selbstgehostete Nachbildung des Partyspiels **Hues and Cues** für
+Spielabende im selben Raum. Jeder öffnet die Seite auf dem eigenen Rechner, die
+Hinweise werden **laut ausgesprochen** – die App koordiniert nur Board, Züge und
+Punkte.
+
+Gebaut mit [Nuxt 3](https://nuxt.com). Ein gemeinsames Spiel pro Server,
+Zustand im Arbeitsspeicher, kein Backend-Service, keine Datenbank.
+
+## So wird gespielt
+
+1. **Server starten** (siehe unten) und `http://localhost:3000` öffnen.
+2. Jede:r gibt einen Namen ein und ist sofort im selben Spiel.
+3. **Wer dran ist** klickt „Zug starten", bekommt eine Karte mit **4 Farben** und
+   wählt heimlich eine als Ziel.
+4. Die:der Hinweisgeber:in sagt einen **1. Hinweis laut** (ein Wort). Alle
+   anderen setzen ihren Stein auf ein Farbfeld des Boards.
+5. Dann ein **2. Hinweis laut** (max. zwei Wörter) und ein zweiter Stein.
+6. „Aufdecken & werten" zeigt das Ziel und den 3×3-Wertungsrahmen, die Punkte
+   werden vergeben. Danach startet die nächste Runde.
+
+### Wertung (Originalregeln)
+
+Distanz eines Steins zum Zielfeld (Chebyshev, also „König-Schritte"):
+
+| Entfernung | Punkte |
+| ---------- | ------ |
+| exakt getroffen | **3** |
+| direkt angrenzend (1 Feld) | **2** |
+| zwei Felder entfernt | **1** |
+| weiter weg | 0 |
+
+Die:der **Hinweisgeber:in** bekommt **+1 Punkt pro Stein**, der im 3×3-Rahmen um
+das Ziel liegt (Entfernung ≤ 1).
+
+Es gibt kein automatisches Spielende – das Scoreboard läuft weiter, bis jemand
+auf **„Spiel zurücksetzen"** klickt.
+
+### Hinweis-Regeln (verbal)
+
+Wie im Original: keine reinen Grundfarbennamen und nicht „hell"/„dunkel".
+Abstrakte Begriffe wie „Lavendel" oder „Kaffee" sind erlaubt. Die App erzwingt
+das nicht – ihr sagt die Hinweise laut und haltet euch selbst an die Regeln.
 
 ## Setup
 
-Make sure to install dependencies:
-
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
 yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
 yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Dann im Browser `http://localhost:3000` öffnen. Andere im selben (W)LAN erreichen
+das Spiel unter `http://<deine-IP>:3000`.
 
-Build the application for production:
+## Tests
+
+Die Wertungslogik ist mit Unit-Tests abgesichert:
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+yarn test
 ```
 
-Locally preview production build:
+## Architektur
 
-```bash
-# npm
-npm run preview
+- **Frontend:** alles in [`app.vue`](app.vue) – Board (30×16 = 480 HSL-Farben),
+  Lobby, Phasen-UI, Scoreboard. Pollt `GET /api/state` alle 1,5 s.
+- **Backend:** In-Memory-Spielzustand in
+  [`server/utils/game.ts`](server/utils/game.ts) + REST-Routen unter
+  [`server/api/`](server/api/) (`state`, `join`, `action`). Die geheime
+  Zielfarbe und die Karte werden Nicht-Hinweisgebern erst beim Aufdecken
+  geschickt.
+- **Wertung:** [`server/utils/scoring.ts`](server/utils/scoring.ts), getestet in
+  [`server/utils/scoring.test.ts`](server/utils/scoring.test.ts).
 
-# pnpm
-pnpm preview
+> ⚠️ Der Spielzustand lebt im Server-Prozess. Ein Neustart (oder `yarn dev`-Reload)
+> setzt das Spiel zurück. Inaktive Spieler:innen fliegen nach ~15 s raus.
 
-# yarn
-yarn preview
+## Lizenz / Hinweis
 
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# Hues-and-Cues
+Inoffizielles Fan-Projekt zum privaten Gebrauch. „Hues and Cues" ist ein Spiel
+von Scott Brady, veröffentlicht von The Op (USAopoly).
