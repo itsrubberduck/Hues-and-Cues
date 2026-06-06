@@ -50,8 +50,19 @@ yarn install
 yarn dev
 ```
 
-Dann im Browser `http://localhost:3000` öffnen. Andere im selben (W)LAN erreichen
-das Spiel unter `http://<deine-IP>:3000`.
+Dann im Browser `http://localhost:3000` öffnen. Für die anderen im Raum:
+
+```bash
+yarn dev --host
+```
+
+zeigt die Netzwerk-Adresse (`http://<deine-IP>:3000`), die alle im selben (W)LAN
+aufrufen können.
+
+> Das `dev`-Script setzt bewusst `TMPDIR=/tmp`. Grund: Nuxts vite-node-Socket
+> landet sonst unter dem langen macOS-Pfad `/var/folders/…` und überschreitet das
+> 104-Zeichen-Limit für Unix-Sockets – dann bricht der Dev-Server mit
+> „Failed to restrict vite-node socket permissions" ab.
 
 ## Tests
 

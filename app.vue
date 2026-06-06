@@ -26,8 +26,11 @@ const state = ref<StateView | null>(null)
 let pollTimer: ReturnType<typeof setInterval> | null = null
 
 // --- Board colour model (must match the server's cell identity) ---
+// Sweep only part of the hue wheel (red -> violet) instead of the full 360°,
+// otherwise the last column wraps back to ~red and looks like the first.
+const HUE_SPAN = 270
 function cellColor(col: number, row: number): string {
-  const hue = Math.round(((col - 1) / COLS) * 360)
+  const hue = Math.round(((col - 1) / (COLS - 1)) * HUE_SPAN)
   const light = 90 - (row / (ROWS - 1)) * 70 // 90% (top) -> 20% (bottom)
   return `hsl(${hue}, 70%, ${light}%)`
 }
